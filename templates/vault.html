@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    {% assets "tailwind" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl font-bold mb-4">Secure Biometric Vault</h1>
+        <p class="text-gray-400 mb-12">Welcome, {{ name }}. Select an action.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/vault/add_page" class="bg-gray-800 p-8 rounded-xl border border-gray-700 hover:border-blue-500 transition group">
+                <div class="text-3xl mb-4 group-hover:scale-110 transition">➕</div>
+                <h2 class="text-xl font-bold mb-2">Add Password</h2>
+                <p class="text-sm text-gray-500">Enroll new credentials into your secure database.</p>
+            </a>
+
+            <a href="/vault/view_page" class="bg-gray-800 p-8 rounded-xl border border-gray-700 hover:border-green-500 transition group">
+                <div class="text-3xl mb-4 group-hover:scale-110 transition">🔑</div>
+                <h2 class="text-xl font-bold mb-2">View Vault</h2>
+                <p class="text-sm text-gray-500">Scan your face to retrieve and view stored passwords.</p>
+            </a>
+
+            <a href="/vault/delete_page" class="bg-gray-800 p-8 rounded-xl border border-gray-700 hover:border-red-500 transition group">
+                <div class="text-3xl mb-4 group-hover:scale-110 transition">🗑️</div>
+                <h2 class="text-xl font-bold mb-2">Manage & Delete</h2>
+                <p class="text-sm text-gray-500">Authorize the removal of existing vault entries.</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

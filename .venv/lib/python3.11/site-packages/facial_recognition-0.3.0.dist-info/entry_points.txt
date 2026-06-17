@@ -1,0 +1,3 @@
+[console_scripts]
+facial_recognition = facial_recognition.cli:main
+facial_recognition-setup = facial_recognition.setup_model:main

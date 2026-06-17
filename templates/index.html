@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, inital-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <title>Main Page</title> 
+    <body class="bg-gray-900 text-white p-8">
+    <div class="grid min-h-2xl min-w-2xl grid-flow-col grid-rows-4 grid-cols-3 gap-y-8 gap-2"> <p class="text-lg text-center text-cyan-400 self-center bg-cyan-700 rounded-md ">Hello There are {{NumSus[0]|e}} Users in the database</p>
+    <a href="viewer" class="bg-sky-500 outline-sky-200 shadow-sky-800 hover:bg-sky-700 hover:outline-black shadow-lg  text-center max-w-md outline-2    justify-items-center rounded-full p-2 self-center gap-4"><button>Current Users</button></a>
+    <a href="adder" class="bg-lime-500 outline-lime-200 shadow-lime-800 hover:bg-lime-700 hover:outline-black shadow-lg  text-center max-w-md outline-2    justify-items-center rounded-full p-2 self-center gap-4"><button>Add Users</button></a>
+    <a href="check" class="bg-yellow-500 outline-yellow-200 shadow-yellow-800 hover:bg-yellow-700 hover:outline-black shadow-lg  text-center max-w-md outline-2    justify-items-center rounded-full p-2 self-center gap-4"><button>Sign In</button></a>  
+    </div>
+    <p class="text-xs m-4 text-slate-600">Version 1.1</p>
+    </body>    
+</head>

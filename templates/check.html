@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, inital-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <title id="TitleChange">Sign In</title>
+    <span class="col-span-2">
+    <a class="cursor-pointer" href="/">
+        <button
+  class="bg-gray-900 text-center w-48 rounded-2xl h-14 my-6 relative text-white text-xl font-semibold group"
+  type="button"
+>
+  <div
+    class="bg-green-400 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1024 1024"
+      height="25px"
+      width="25px"
+    >
+      <path
+        d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
+        fill="#000000"
+      ></path>
+      <path
+        d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
+        fill="#000000"
+      ></path>
+    </svg>
+  </div>
+  <p class="translate-x-2">Go Back</p>
+</button>
+</a>
+</span> 
+<body class="bg-gray-900 text-white p-8">
+    <span class="flex gap-4">
+    <video id="video" class="flex-initial" width="640" height="480" autoplay></video>
+    </span>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <div>
+      <label for="password" class="block text-zinc-300 font-semibold text-sm"
+        >Password</label
+      >
+        <div class="mt-2">
+          <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-zinc-100"
+          />
+        </div>
+    </div>
+    <div>
+      <label for="2FA" class="block text-zinc-300 font-semibold text-sm"
+        >2FA Code</label
+      >
+        <div class="mt-2">
+          <input
+                    type="text"
+                    name="2FA"
+                    id="2FA"
+                    class="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-zinc-100"
+          />
+        </div>
+    </div>
+    <input id="submitBtn" onclick="captureAndSendImage()" class="formele text-zinc-400 block w-60 shadow-sm shadow-gray-600 rounded-md  px-2 ring-2 my-6 ring-slate-700 hover:text-zinc-100" type="submit" value="Log in">
+    <label class="block pl-1 text-base text-gray-600 font-bold ">User Logins</label>
+    <table id="responseTable" class="border-collapse border-4 border-sky-500 border-spacing-40 p-2 m-6 ">
+    <tr class="bg-sky-600">
+    </tr>
+            <tr id="responseRow" class="">
+            <p id="responseSuccess" class="text-green-400 bg-green-800 w-56 hidden text-md rounded-sm ">User Logged In Redirecting...</p>
+            <p id="responseFailure" class="text-red-400 bg-red-800 w-56 hidden text-md rounded-sm ">Failed to Log In</p>
+            <td id="responseName" class=" hidden text-sm text-center text-gray-200 text-clip"></td>
+    </table>
+
+ 
+    <script>
+        let maxEntries = 8; // Limit the table to this many rows
+        let entryCount = 0;
+        let tableBody = document.getElementById("HistoryBody");
+        let video = document.getElementById("video");
+        let captureButton = document.getElementById("capture");
+        let canvas = document.getElementById("canvas");
+        let passwordInput = document.getElementById("password");
+        let twoFAInput = document.getElementById("2FA");
+        let ctx = canvas.getContext("2d");
+        let responseRow = document.getElementById("responseRow");
+        let responseName = document.getElementById("responseName");
+        let responseSuccess = document.getElementById("responseSuccess");
+        let responseFailure = document.getElementById("responseFailure");
+        //let responseAge = document.getElementById("responseAge");
+        //let responseGender = document.getElementById("responseGender");
+        //let responseWarrant = document.getElementById("responseWarrant");
+        //let responseCatch = document.getElementById("responseCatch");
+        //let responseOrigin = document.getElementById("responseOrigin");
+        //let responseTable = document.getElementById("responseTable");
+
+        let originalTitle = document.title;
+        let flashInterval;
+
+        function flashTitle(message) {
+        let isOriginal = true;
+
+        // Start flashing
+        flashInterval = setInterval(() => {
+            document.title = isOriginal ? message : originalTitle;
+            isOriginal = !isOriginal;
+        }, 1000); // Change every second
+        }
+
+        // Detect when user returns to tab and stop flashing
+        document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+          clearInterval(flashInterval);
+          document.title = originalTitle; // Restore original title
+        }
+        });
+
+        // Start camera
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (error) {
+                console.error("Error accessing camera:", error);
+            }
+        }
+
+        async function captureAndSendImage() {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            let imageDataURL = canvas.toDataURL("image/png");
+            let password = passwordInput.value;
+            let twoFA = twoFAInput.value;
+
+            let response = await fetch("check", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ imageData: imageDataURL, password: password, twoFA: twoFA })
+            });
+
+            let result = await response.json();
+            if (result) {
+                responseName.classList.add("bg-sky-800");
+                responseName.classList.remove("hidden");
+                responseName.innerHTML = "User: " + result[1] + " Logged In";
+                responseSuccess.classList.remove("hidden");
+                responseFailure.classList.add("hidden");
+                if (document.hidden) {
+                  flashTitle("⚠️ New Alert! ⚠️");
+                }
+                let timestamp = new Date().toLocaleString(); // Current time
+
+                setTimeout(() => {
+                  window.location.href = "/vault";
+                }, 2000);
+            // If theres no response data we failed to log in
+            } else {
+                responseName.classList.remove("bg-sky-800");
+                responseName.classList.add("hidden");
+                responseSuccess.classList.add("hidden");
+                responseFailure.classList.remove("hidden");
+            }
+        };
+        // Start camera on page load
+        startCamera();
+        //setInterval(captureAndSendImage, 1500);
+    </script>
+    </body>    
+</head>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, inital-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <title>Add Users</title> 
+    <body class="bg-gray-900 text-white p-8">
+        <a class="cursor-pointer" href="/">
+        <button
+  class="bg-gray-900 text-center w-48 rounded-2xl h-14 my-6 relative text-white text-xl font-semibold group"
+  type="button"
+>
+  <div
+    class="bg-green-400 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1024 1024"
+      height="25px"
+      width="25px"
+    >
+      <path
+        d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
+        fill="#000000"
+      ></path>
+      <path
+        d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
+        fill="#000000"
+      ></path>
+    </svg>
+  </div>
+  <p class="translate-x-2">Go Back</p>
+</button>
+</a>
+        <form action="/adder" class="p-4 shadow-md shadow-gray-400 max-w-screen-md" method="post" id="myForm" enctype="multipart/form-data">
+            <label class="custum-file-upload formele" for="picture">
+                <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+                </div>
+                <div class="text">
+                   <span>Click to upload image</span>
+                   </div>
+                   <input type="file" id="picture" name="picture">
+            </label>
+            <div>
+                <label for="name" class="block text-gray-800 font-semibold text-sm"
+                  >Name of User Account</label
+                >
+                <div class="mt-2">
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    class="block formele w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                  />
+                </div>
+            </div>
+            <label for="gender" class="block text-gray-800 font-semibold text-sm"
+              >Gender</label
+            >
+            <select class="formele block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800" id="gender" name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            </div>
+            <div>
+                <label for="password" class="block text-gray-800 font-semibold text-sm"
+                  >Password</label
+                >
+                <div class="mt-2">
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                  />
+                </div>
+                <label class="pt-1 block text-gray-500 text-sm">This User's password</label>
+            </div>
+            <input id="submitBtn" class="formele text-gray-500 block w-60 shadow-sm shadow-gray-600 rounded-md  px-2 ring-2 my-6 ring-slate-700 hover:text-gray-900" type="submit" value="Add User">
+        </form>
+        {% if Added is defined %}
+            {% if Added %}
+              <p class="text-green-400 bg-green-800 w-56 block text-md rounded-sm">User Added
+                <img src="data:image/png;base64,{{ qr_img }}" />
+                <p>Or manually enter this secret:</p>
+                <code>{{ secret }}</code>
+              </p>
+            {% else %}
+              <p id="failadd" class="text-red-400 bg-red-800 w-56 block text-md rounded-sm pt-2">Failed to Add User</p>
+              <label for="failadd" class="pt-1 block text-sm text-gray-500 w-48 text-clip">Make sure you filled out every field and included a clear photo of the user</label>
+            {% endif %}
+        {% endif %}
+    </body>
+    
+</head>
